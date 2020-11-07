@@ -1,11 +1,13 @@
 // Import MySQL connection.
 const connection = require("./connection.js");
 
+// create orm variable to house object with orm methods
 const orm = {
 
 // selectBurger
-// what's going to be passed into this function
+// variables passed into this function need to correspond with what's passed in the query
 selectAllBurgers: function(burgerName, isDevoured) {
+    // create variable to hold sql syntax
     const selectQueryString = "SELECT * FROM ? WHERE ? = ?";
     // variables to be passed as values into the table
     connection.query(selectQueryString, [burgerName, isDevoured], function(err, selectedResults) {
@@ -14,18 +16,18 @@ selectAllBurgers: function(burgerName, isDevoured) {
     })
 },
 
-// insertBurger:
+// create a new burger; new burger begins with value false for is devoured
 createBurger: function(burgerName, isDevoured) {
-    const createQueryString = "INSERT INTO burgers (burger_name, devoured)VALUES (?, ?)";
+    const createQueryString = "INSERT INTO burgers (burger_name, devoured)VALUES (?, false)";
     connection.query(createQueryString, [burgerName, isDevoured], function(err, createdResults) {
         if (err) throw err;
         console.log(createdResults);
     })
 },
 
-// updateBurger:
+// need to select all by id to update a specific burger
 updateBurger: function(burgerName, isDevoured) {
-    const updateQueryString = "";
+    const updateQueryString = "SELECT * FROM burgers WHERE id=?";
     connection.query(updateQueryString, [burgerName, isDevoured], function(err, updateResults) {
         if (err) throw err;
         console.log(updateResults)
@@ -34,6 +36,5 @@ updateBurger: function(burgerName, isDevoured) {
 
 }
 
-// }
-// Export the orm object for the model (cat.js).
+// export orm for use in other files
 module.exports = orm;
