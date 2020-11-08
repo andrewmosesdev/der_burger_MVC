@@ -4,7 +4,7 @@ const router = express.Router();
 
 // create router
 router.get("/", function(req, res) {
-    burger.selectAllBurgers(function(data) {
+    burger.all(function(data) {
         const burgerObj = {
             burgers: data
         };
@@ -14,7 +14,7 @@ router.get("/", function(req, res) {
 });
 
 router.post("/api/burgers", function(req, res) {
-    burger.createBurger(["burger_name, false"], [req.body.burger_name, req.body.devoured], function(createdResults) {
+    burger.create(["burger_name, false"], [req.body.burger_name, req.body.devoured], function(createdResults) {
         res.json({ id: createdResults.insertId })
     })
 });
@@ -22,10 +22,9 @@ router.post("/api/burgers", function(req, res) {
 router.put("/api/burgers/:id", function(req, res) {
     const idVarHolder = "id = " + req.params.id;
 
-    burger.updateBurger(
-        // need to pass an object here as first argument, idVarHold as second, then call back
-        {},
-        idVarHolder, function(updateResults) {
+    burger.update({
+            devoured: req.body.devoured
+        }, idVarHolder, function(updateResults) {
             if(updateResults.changedRows === 0) {
                 return res.status(404).end();
             } else {

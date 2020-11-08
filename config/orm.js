@@ -6,7 +6,7 @@ const orm = {
 
 // selectBurger
 // variables passed into this function need to correspond with what's passed in the query
-selectAllBurgers: function(burgerName, isDevoured) {
+all: function(burgerName, isDevoured) {
     // create variable to hold sql syntax
     const selectQueryString = "SELECT * FROM ? WHERE ? = ?";
     // variables to be passed as values into the table
@@ -17,7 +17,7 @@ selectAllBurgers: function(burgerName, isDevoured) {
 },
 
 // create a new burger; new burger begins with value false for is devoured
-createBurger: function(burgerName, isDevoured) {
+create: function(burgerName, isDevoured) {
     const createQueryString = "INSERT INTO burgers (burger_name, devoured)VALUES (?, false)";
     connection.query(createQueryString, [burgerName, isDevoured], function(err, createdResults) {
         if (err) throw err;
@@ -26,7 +26,7 @@ createBurger: function(burgerName, isDevoured) {
 },
 
 // need to select all by id to update a specific burger
-updateBurger: function(burgerName, isDevoured) {
+update: function(burgerName, isDevoured) {
     const updateQueryString = "SELECT * FROM burgers WHERE id=?";
     connection.query(updateQueryString, [burgerName, isDevoured], function(err, updateResults) {
         if (err) throw err;
