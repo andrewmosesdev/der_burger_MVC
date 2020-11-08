@@ -1,40 +1,92 @@
 // Import MySQL connection.
 const connection = require("./connection.js");
 
+
+function printQuestionMarks(num) {
+    const arr = [];
+  
+    for (let i = 0; i < num; i++) {
+      arr.push("?");
+    }
+  
+    return arr.toString();
+}
+  
+  // Helper function to convert object key/value pairs to SQL syntax
+  function objToSql(ob) {
+    const arr = [];
+  
+    // loop through the keys and push the key/value as a string int arr
+    for (const key in ob) {
+      let value = ob[key];
+      // check to skip hidden properties
+      if (Object.hasOwnProperty.call(ob, key)) {
+        // if string with spaces, add quotations (Lana Del Grey => 'Lana Del Grey')
+        if (typeof value === "string" && value.indexOf(" ") >= 0) {
+          value = "'" + value + "'";
+        }
+        // e.g. {name: 'Lana Del Grey'} => ["name='Lana Del Grey'"]
+        // e.g. {sleepy: true} => ["sleepy=true"]
+        arr.push(key + "=" + value);
+      }
+    }
+  
+    // translate array of strings to a single comma-separated string
+    return arr.toString();
+  }
+  
 // create orm variable to house object with orm methods
 const orm = {
+  all: function(tableInput, cb) {
+    const queryString = "SELECT * FROM " + tableInput + ";";
+    connection.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+      cb(result);
+    });
+  },
 
-// selectBurger
-// variables passed into this function need to correspond with what's passed in the query
-all: function(burgerName, isDevoured) {
-    // create variable to hold sql syntax
-    const selectQueryString = "SELECT * FROM ? WHERE ? = ?";
-    // variables to be passed as values into the table
-    connection.query(selectQueryString, [burgerName, isDevoured], function(err, selectedResults) {
-        if (err) throw err;
-        console.log(selectedResults);
-    })
-},
+  create: function(table, cols, vals, cb) {
+    let queryString = "INSERT INTO " + table;
 
-// create a new burger; new burger begins with value false for is devoured
-create: function(burgerName, isDevoured) {
-    const createQueryString = "INSERT INTO burgers (burger_name, devoured)VALUES (?, false)";
-    connection.query(createQueryString, [burgerName, isDevoured], function(err, createdResults) {
-        if (err) throw err;
-        console.log(createdResults);
-    })
-},
+    queryString += " (";
+    queryString += cols.toString();
+    queryString += ") ";
+    queryString += "VALUES (";
+    queryString += printQuestionMarks(vals.length);
+    queryString += ") ";
 
-// need to select all by id to update a specific burger
-update: function(burgerName, isDevoured) {
-    const updateQueryString = "SELECT * FROM burgers WHERE id=?";
-    connection.query(updateQueryString, [burgerName, isDevoured], function(err, updateResults) {
-        if (err) throw err;
-        console.log(updateResults)
-    })
-}
+    console.log(queryString);
 
-}
+    connection.query(queryString, vals, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(result);
+    });
+  },
+  // An example of objColVals would be {name: panther, sleepy: true}
+  update: function(table, objColVals, devoured, cb) {
+    let queryString = "UPDATE " + table;
+
+    queryString += " SET ";
+    queryString += objToSql(objColVals);
+    queryString += " WHERE ";
+    queryString += devoured;
+
+    console.log(queryString);
+    connection.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(result);
+    });
+  },
+  
+};
 
 // export orm for use in other files
 module.exports = orm;
