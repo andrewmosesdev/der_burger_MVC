@@ -1,18 +1,29 @@
 body {
+    background-color: rgb(219, 217, 217);
+}
+
+h1 {
+    text-align: center;
+}
+
+.col1 {
+    display: flex;
+    justify-content: left;
+    
+}
+
+.col2 {
+    display: flex;
+    justify-content: right;
+}
+
+.row {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    width: 80%;
 }
 
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: space-between;
-    margin: 0 auto;
-    /* max-width: 1050px; */
-}
-
-.img-container {
-    
+.row2 {
+    text-align: center;
 }
