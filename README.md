@@ -6,7 +6,7 @@
   Utilizing Node.js, MySql, and express-handlebars, the Burger MVC allows the user to add burgers to be devoured, and devour the burgers that have been added- all with persistence through JawsDB. Deployed via Heroku. 
   
 ## Demo:
-  ![Demo]()
+  ![Demo](https://github.com/andrewmosesdrive/der_burger_MVC/blob/main/public/assets/img/burger.gif?raw=true)
 
   
   ## Table of Contents:
